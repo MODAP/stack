@@ -14,7 +14,9 @@ pub struct Locale {
     // Position: 2nd int. of accer
     pub position:  na::SVector<f32,3>,
     // Timestamp of the previous update
-    timestamp: SystemTime
+    timestamp: SystemTime,
+    // Aprogee detection armed
+    armed: bool
 }
 
 // Implements the locale struct with facilities
@@ -29,19 +31,19 @@ impl Locale {
     /// - `accel:(f32,f32,f32)`: the new acceleration
     ///
     /// # Returns
-    /// `Result<Self, SystemTimeError>`: a Clone of the object with values updated
+    /// `Result<bool, SystemTimeError>`: whether or not are in, or an error
     ///
     /// # Examples
     ///
     /// ```
     /// let mut loc = brain::Locale::new((0.0,0.0,0.0));
-    /// loc = loc.update((0.0, 0.3, 0.4)).unwrap(); // DANGEROUS we unwrap b/c it returns a Result
-    ///                                             // but it could error with SystemTimeError
-    ///                                             // when Rust cannot access the hardware clock
-    ///                                             // and that case should be handled with `match`
+    /// loc.update((0.0, 0.3, 0.4)).unwrap(); // DANGEROUS we unwrap b/c it returns a Result
+    ///                                       // but it could error with SystemTimeError
+    ///                                       // when Rust cannot access the hardware clock
+    ///                                       // and that case should be handled with `match`
     /// println!("{}", loc.position); 
     /// ```
-    pub fn update(&mut self, accel:(f32,f32,f32)) -> Result<Self, SystemTimeError>{
+    pub fn update(&mut self, accel:(f32,f32,f32)) -> Result<bool, SystemTimeError>{
         let elapsed:f32 = self.timestamp.elapsed()?.as_secs_f32();
 
         self.accel = na::Vector3::<f32>::new(accel.0, accel.1, accel.2);
@@ -50,7 +52,11 @@ impl Locale {
 
         self.timestamp = SystemTime::now();
 
-        Ok(self.clone())
+        // Arm the apogee detection of velocity becomes > 5m/s
+        // Arm the apogee detection of velocity becomes > 5m/s
+        return Ok( if self.velocity.magnitude() > 5.0 { self.armed = true; false } 
+                   else if self.armed && self.velocity.magnitude() < 0.1 { true }
+                   else { false } )
     }
 
     /// Initialize the Locale with an initial position
@@ -66,7 +72,8 @@ impl Locale {
             accel: na::Vector3::<f32>::zeros(),
             velocity: na::Vector3::<f32>::zeros(),
             position: na::Vector3::<f32>::new(initial_pos.0, initial_pos.1, initial_pos.2),
-            timestamp: SystemTime::now()
+            timestamp: SystemTime::now(),
+            armed: false
         }
     }
 }
@@ -80,12 +87,15 @@ mod tests {
     fn locale() {
         let mut loc = Locale::new((0.0,40.0,0.0));
 
-        loc = loc.update((0.0, -209.8, 0.0)).unwrap();
+        // DANGEROUS we unwrap b/c it returns a Result
+        // but it could error with SystemTimeError
+        // when Rust cannot access the hardware clock
+        // and that case should be handled with `match`
+        // instead of just wrapping
+        loc.update((0.0, -209.8, 0.0)).unwrap();
+        loc.update((0.0, 100.8, 0.0)).unwrap();
+        loc.update((0.0, -9.8, 0.0)).unwrap();
 
-        loc = loc.update((0.0, 100.8, 0.0)).unwrap();
-
-        loc = loc.update((0.0, -9.8, 0.0)).unwrap();
-
-        let _loss = loc.position.magnitude();
+        let _pos = loc.position.magnitude();
     }
 }
