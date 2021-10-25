@@ -5,3 +5,5 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
+ndarray = "0.15.3"
+nalgebra = "0.29.0"
