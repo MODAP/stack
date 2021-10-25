@@ -31,7 +31,7 @@ impl Locale {
     /// - `accel:(f32,f32,f32)`: the new acceleration
     ///
     /// # Returns
-    /// `Result<bool, SystemTimeError>`: whether or not are in, or an error
+    /// `Result<bool, SystemTimeError>`: whether or not we have reached apogee
     ///
     /// # Examples
     ///
