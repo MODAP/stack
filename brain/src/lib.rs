@@ -50,7 +50,10 @@ impl Locale {
     pub fn update(&mut self, accel:(f32,f32,f32)) -> Result<bool, SystemTimeError>{
         // Push the current stamp into cache
         self.accel_cache.push(na::Vector3::<f32>::new(accel.0, accel.1, accel.2));
-        self.accel = self.accel_cache.iter().sum();
+        self.accel = self.accel_cache
+            .iter()
+            .sum::<na::SVector<f32,3>>()
+            .scale(1.0/(self.accel_cache.len() as f32));
 
         // Calculate elapsed time since last stamp
         let elapsed:u16 = (self.timestamp.elapsed()?.as_millis()) as u16;
@@ -62,8 +65,8 @@ impl Locale {
             self.accel_cache = vec![];
 
             // Push the velocity and position values
-            self.velocity += self.accel.scale(elapsed.into());
-            self.position += self.velocity.scale(elapsed.into());
+            self.velocity += self.accel.scale(elapsed as f32 / 1000.0);
+            self.position += self.velocity.scale(elapsed as f32 / 1000.0);
         }
 
         // Arm the apogee detection of velocity becomes > 5m/s
@@ -107,17 +110,28 @@ mod tests {
 
     #[test]
     fn locale() {
-        let mut loc = Locale::new((0.0,40.0,0.0), 500);
+        let mut loc = Locale::new((0.0,4000.0,0.0), 500);
 
         // DANGEROUS we unwrap b/c it returns a Result
         // but it could error with SystemTimeError
         // when Rust cannot access the hardware clock
         // and that case should be handled with `match`
         // instead of just wrapping
-        loc.update((0.0, -209.8, 0.0)).unwrap();
-        loc.update((0.0, 100.8, 0.0)).unwrap();
-        loc.update((0.0, -9.8, 0.0)).unwrap();
+
+        let mut n:u128 = 0;
+        loop {
+            n+=1;
+            loc.update((1.0, -9.8, 0.0)).unwrap();
+
+            if n > 10000 { break; }
+        }
+
+        println!("hewoo, {} {} {}", loc.position
+                                  , loc.velocity
+                                  , loc.accel);
+
 
         let _pos = loc.position.magnitude();
+        assert!(false);
     }
 }
