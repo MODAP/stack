@@ -39,10 +39,12 @@ fn main() {
         let acc = mpu.get_acc().unwrap();
         println!("acc: {:?}", acc);
 
+	// insert acc unwrapping code
+
 	location.update(acc, gyro).unwrap();
 
 	csv_accels.write_record(&acc).unwrap();
-	csv_localizations.write_record(&location.position).unwrap();
+	csv_localizations.write_record(&[location.position[0].to_string(), location.position[1].to_string(), location.position[2].to_string()]).unwrap();
     }
     
 }
