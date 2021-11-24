@@ -41,10 +41,13 @@ fn main() {
 
 	// insert acc unwrapping code
 
-	location.update(acc, gyro).unwrap();
+	location.update((acc.x, acc.y, acc.z), (gyro.x, gyro.y, gyro.z)).unwrap();
 
-	csv_accels.write_record(&acc).unwrap();
+	csv_accels.write_record(&[acc.to_string(), gyro.to_string()]).unwrap();
 	csv_localizations.write_record(&[location.position[0].to_string(), location.position[1].to_string(), location.position[2].to_string()]).unwrap();
+
+	csv_accels.flush();
+	csv_localizations.flush();
     }
     
 }
