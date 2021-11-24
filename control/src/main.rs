@@ -1,10 +1,12 @@
 use brain;
 use mpu6050; // TODO Fix (bad)
 use linux_embedded_hal::{I2cdev, Delay};
-use i2cdev::linux::LinuxI2CError;
+use i2cdev::linux::LinuxI2CError; // Haha this implies I care about errors
 
-/// Oh god.
+/// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
 fn main() {
+    println!("send. help.");
+    
     let i2c = I2cdev::new("/dev/i2c-1").unwrap(); // From example, but also probably correct
     let mut delay = Delay; // From digging through code it's some delay functionality thing we don't care that much about
 
@@ -29,5 +31,4 @@ fn main() {
         println!("acc: {:?}", acc);
     }
     
-    println!("send. help.");
 }
