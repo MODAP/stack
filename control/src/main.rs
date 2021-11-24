@@ -1,5 +1,5 @@
 use brain;
 
 fn main()  {
-    println!("Here's a number from brain: {}", brain::hewooooo());
+    println!("how tf does rust work lmao");
 }
