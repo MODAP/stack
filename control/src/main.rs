@@ -1,5 +1,6 @@
 use brain;
 
+/// Oh god.
 fn main()  {
-    println!("how tf does rust work lmao");
+    println!("");
 }
