@@ -11,7 +11,7 @@ use csv::Writer;
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     println!("send. help.");
     
-    let i2c = I2cdev::new("/dev/i2c-1").map_err(mpu6050::Mpu6050Error::I2c)?; // From example, but also probably correct
+    let i2c = I2cdev::new("/dev/i2c-0").map_err(mpu6050::Mpu6050Error::I2c)?; // From example, but also probably correct
     let mut delay = Delay; // Uhhhh from digging through code it's some delay functionality thing we don't care that much about
 
     let mut location = brain::Locale::new((0.0,0.0,0.0), 500); // FIXME using documented values bc I don't care about fidelity and zeroing is a good idea
@@ -24,8 +24,8 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
 
     loop {
 	// get roll and pitch estimate
-        let wtfthiscodedumb = mpu.get_acc_angles()?;
-        println!("r/p: {:?}", wtfthiscodedumb);
+        //let wtfthiscodedumb = mpu.get_acc_angles()?;
+        //println!("r/p: {:?}", wtfthiscodedumb);
 
         // get sensor temp
         let temp = mpu.get_temp()?;
