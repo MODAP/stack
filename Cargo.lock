@@ -115,6 +115,7 @@ dependencies = [
 name = "control"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "brain",
  "csv",
  "i2cdev",

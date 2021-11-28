@@ -3,14 +3,13 @@ use mpu6050;
 use linux_embedded_hal::{I2cdev, Delay};
 use i2cdev::linux::LinuxI2CError; // Haha this implies I care about errors
 
-use std::error::Error; // probably shouldn't panic when we can't write but ditto
 use csv::Writer;
 
 
 /// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
-    println!("|MODAP||stack| \n Hello Luca; you wanted this. \n commit: {} \n timestamp: {} \n target: {}",
-             env!("VERGEN_GIT_SHA_SHORT"),
+    println!("///MODAP/stack///\nStackety Stackety Stack\n commit: {}\ntimestamp: {}\ntarget: {}",
+             env!("VERGEN_GIT_SHA"),
              env!("VERGEN_GIT_COMMIT_TIMESTAMP"),
              env!("VERGEN_RUSTC_HOST_TRIPLE"));
 
@@ -23,8 +22,8 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     let mut csv_localizations = Writer::from_path("localizations.csv").unwrap();
     
     let mut mpu = mpu6050::Mpu6050::new(i2c);
-    mpu.set_gyro_range(mpu6050::device::GyroRange::D2000);
-    mpu.set_accel_range(mpu6050::device::AccelRange::G16);
+    mpu.set_gyro_range(mpu6050::device::GyroRange::D2000)?;
+    mpu.set_accel_range(mpu6050::device::AccelRange::G16)?;
     mpu.init(&mut delay)?;
 
     loop {
