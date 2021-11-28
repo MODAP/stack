@@ -20,6 +20,8 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     let mut csv_localizations = Writer::from_path("localizations.csv").unwrap();
     
     let mut mpu = mpu6050::Mpu6050::new(i2c);
+    mpu.set_gyro_range(D2000);
+    mpu.set_accel_range(G16);
     mpu.init(&mut delay)?;
 
     loop {
