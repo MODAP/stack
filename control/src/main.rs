@@ -9,7 +9,7 @@ use csv::Writer;
 
 /// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
-    println!("send. help.")
+    println!("send. help.");
     let i2c = I2cdev::new("/dev/i2c-0").map_err(mpu6050::Mpu6050Error::I2c)?; // From example, but also probably correct
     let mut delay = Delay; // Uhhhh from digging through code it's some delay functionality thing we don't care that much about
 
@@ -19,8 +19,8 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     let mut csv_localizations = Writer::from_path("localizations.csv").unwrap();
     
     let mut mpu = mpu6050::Mpu6050::new(i2c);
-    mpu.set_gyro_range(D2000);
-    mpu.set_accel_range(G16);
+    mpu.set_gyro_range(mpu6050::device::GyroRange::D2000);
+    mpu.set_accel_range(mpu6050::device::AccelRange::G16);
     mpu.init(&mut delay)?;
 
     loop {
