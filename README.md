@@ -18,3 +18,6 @@ Boom! Ascend. We are in the air.
 
 2. Once apogee is reached, Hand code snaps a photo and call the processing code in Brain. Simultaneously, Hand code sends the processed image.
 3. Then, Hand code work on guiding it back down.
+
+# CI Pipeline
+The CI workflow should cross-compile correct binary to work on a [NanoPi NEO Air](https://wiki.friendlyarm.com/wiki/index.php/NanoPi_NEO_Air). Find the current builds in the artifacts page.
