@@ -17,7 +17,7 @@ jobs:
       - name: Check out app
         uses: actions/checkout@v2
       - name: Setup Rustup Toolchain
-        run: sudo apt install rustup
+        run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
       - name: Install x86_64 target
         run: rustup target add x86_64-unknown-linux-gnu
       - name: Run tests
@@ -31,7 +31,7 @@ jobs:
       - name: Check out app
         uses: actions/checkout@v2
       - name: Setup Rustup toolchain
-        run: sudo apt install rustup
+        run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
       - name: Install the ARMV7 gnueabihf toolchain
         run: rustup target add armv7-unknown-linux-gnueabihf
       - name: Install cross-compilation linker
