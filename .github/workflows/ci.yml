@@ -1,0 +1,45 @@
+# This workflow will do a clean install of dependencies, installing the base utilities,
+# run all tests, ensure they pass, and finally build a clean version of the control binary
+#
+# Continuous-Integration, baybeee!
+
+name: CI
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out app
+        uses: actions/checkout@v2
+      - name: Setup Rustup Toolchain
+        run: sudo apt install rustup
+      - name: Install x86_64 target
+        run: rustup target add x86_64-unknown-linux-gnu
+      - name: Run tests
+        run: cargo test --target=x86_64-unknown-linux-gnu
+
+  build_control_binary:
+    runs-on: ubuntu-latest
+    needs: run_tests
+
+    steps:
+      - name: Check out app
+        uses: actions/checkout@v2
+      - name: Setup Rustup toolchain
+        run: sudo apt install rustup
+      - name: Install the ARMV7 gnueabihf toolchain
+        run: rustup target add armv7-unknown-linux-gnueabihf
+      - name: Install cross-compilation linker
+        run: sudo apt install gcc-arm-linux-gnueabihf
+      - name: Build binary
+        run: cargo build --release --target=armv7-unknown-linux-gnueabihf
+      - name: Upload built binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: built_binaries
+          path: target/armv7-unknown-linux-gnueabihf/release
