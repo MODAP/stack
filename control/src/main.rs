@@ -9,11 +9,15 @@ use csv::Writer;
 
 /// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
-    println!("send. help.");
+    println!("|MODAP||stack| \n Hello Luca; you wanted this. \n commit: {} \n timestamp: {} \n target: {}",
+             env!("VERGEN_GIT_SHA_SHORT"),
+             env!("VERGEN_GIT_COMMIT_TIMESTAMP"),
+             env!("VERGEN_RUSTC_HOST_TRIPLE"));
+
     let i2c = I2cdev::new("/dev/i2c-0").map_err(mpu6050::Mpu6050Error::I2c)?; // From example, but also probably correct
     let mut delay = Delay; // Uhhhh from digging through code it's some delay functionality thing we don't care that much about
 
-    let mut location = brain::Locale::new((0.0,0.0,0.0), 500); // FIXME using documented values bc I don't care about fidelity and zeroing is a good idea
+    let mut location = brain::Locale::new((0.0,0.0,0.0), 100); // FIXME using documented values bc I don't care about fidelity and zeroing is a good idea
 
     let mut csv_accels = Writer::from_path("accelerations.csv").unwrap();
     let mut csv_localizations = Writer::from_path("localizations.csv").unwrap();

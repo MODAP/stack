@@ -3,6 +3,7 @@ authors = ["MODAP"]
 edition = "2018"
 name = "control"
 version = "0.1.0"
+build = "build.rs"
 
 [dependencies]
 brain = { path = "../brain" }
@@ -10,3 +11,6 @@ mpu6050 = "0.1.4"
 i2cdev = "0.5.1"
 linux-embedded-hal = "0.3.2"
 csv = "1.1.6"
+
+[build-dependencies]
+vergen = "5"
