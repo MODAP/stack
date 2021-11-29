@@ -8,7 +8,7 @@ use csv::Writer;
 
 /// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
-    println!("///MODAP/stack///\nStackety Stackety Stack\n commit: {}\ntimestamp: {}\ntarget: {}",
+    println!("\n///MODAP/stack///\n  commit: {}\n  timestamp: {}\n  target: {}\n",
              env!("VERGEN_GIT_SHA"),
              env!("VERGEN_GIT_COMMIT_TIMESTAMP"),
              env!("VERGEN_RUSTC_HOST_TRIPLE"));
