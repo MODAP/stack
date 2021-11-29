@@ -3,7 +3,7 @@ Welcome to the MODAP stack.
 
 # Engineering Guide
 ## Common Interfaces
-- Images `ndarray::Array3=` (1600 * 1200 * 3) (width * height * rgb)
+- Images `ndarray::Array3` (1600 * 1200 * 3) (width * height * rgb)
 - Acceleration `(f32,f32,f32)`: range ±36*9.81 m/s^2
 - Rotation `(f32,f32,f32)`: degrees, x, y, z
 
