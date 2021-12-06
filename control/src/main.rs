@@ -16,7 +16,7 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     let i2c = I2cdev::new("/dev/i2c-0").map_err(mpu6050::Mpu6050Error::I2c)?; // From example, but also probably correct
     let mut delay = Delay; // Uhhhh from digging through code it's some delay functionality thing we don't care that much about
 
-    let mut location = brain::Locale::new((0.0,0.0,0.0), 100); // FIXME using documented values bc I don't care about fidelity and zeroing is a good idea
+    let mut location = brain::Locale::new((0.0,0.0,0.0), 10); // FIXME using documented values bc I don't care about fidelity and zeroing is a good idea
 
     let mut csv_accels = Writer::from_path("accelerations.csv").unwrap();
     let mut csv_localizations = Writer::from_path("localizations.csv").unwrap();
