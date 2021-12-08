@@ -26,22 +26,28 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     mpu.set_accel_range(mpu6050::device::AccelRange::G16)?;
     mpu.init(&mut delay)?;
 
+    let mut number = 0;
+
     loop {
+        number += 1;
+
 	// get roll and pitch estimate
         //let wtfthiscodedumb = mpu.get_acc_angles()?;
         //println!("r/p: {:?}", wtfthiscodedumb);
 
-        // get sensor temp
-        let temp = mpu.get_temp()?;
-        println!("temp: {:?}c", temp);
+        if number % 1000 == 0 {
+            // get sensor temp
+            let temp = mpu.get_temp()?;
+            println!("temp: {:?}c", temp);
 
-        // get gyro data, scaled with sensitivity 
-        let gyro = mpu.get_gyro()?;
-        println!("gyro: {:?}", gyro);
+            // get gyro data, scaled with sensitivity 
+            let gyro = mpu.get_gyro()?;
+            println!("gyro: {:?}", gyro);
 
-        // get accelerometer data, scaled with sensitivity
-        let acc = mpu.get_acc()?;
-        println!("acc: {:?}", acc);
+            // get accelerometer data, scaled with sensitivity
+            let acc = mpu.get_acc()?;
+            println!("acc: {:?}", acc);
+        }
 
 	let acc_tuple = (acc.x, acc.y, acc.z);
 	let gyro_tuple = (gyro.x, gyro.y, gyro.z);
