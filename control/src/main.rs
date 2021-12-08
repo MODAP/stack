@@ -39,7 +39,7 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
         let gyro = mpu.get_gyro()?;
         let acc = mpu.get_acc()?;
 
-        if number % 1000 == 0 {
+        if number % 500 == 0 {
             // get sensor temp
             println!("temp: {:?}c", temp);
 
