@@ -3,6 +3,7 @@ use mpu6050;
 use linux_embedded_hal::{I2cdev, Delay};
 use i2cdev::linux::LinuxI2CError; // Haha this implies I care about errors
 
+use std::fs;
 use csv::Writer;
 
 use std::{thread, time};
@@ -31,9 +32,17 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
 
     let mut location = brain::Locale::new((0.0,0.0,0.0), 10); // FIXME using documented values bc I don't care about fidelity and zeroing is a good idea
 
+    if std::path::Path::new("accelerations.csv").exists() { //Check for files and delete them if they exist
+        fs::remove_file("accelerations.csv").unwrap();
+    }
+
+    if std::path::Path::new("localizations.csv").exists() {
+        fs::remove_file("localizations.csv").unwrap();
+    }
+
     let mut csv_accels = Writer::from_path("accelerations.csv").unwrap();
     let mut csv_localizations = Writer::from_path("localizations.csv").unwrap();
-    
+
     let mut mpu = mpu6050::Mpu6050::new(i2c);
     mpu.set_gyro_range(mpu6050::device::GyroRange::D2000)?;
     mpu.set_accel_range(mpu6050::device::AccelRange::G16)?;
