@@ -35,17 +35,18 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
         //let wtfthiscodedumb = mpu.get_acc_angles()?;
         //println!("r/p: {:?}", wtfthiscodedumb);
 
+        let temp = mpu.get_temp()?;
+        let gyro = mpu.get_gyro()?;
+        let acc = mpu.get_acc()?;
+
         if number % 1000 == 0 {
             // get sensor temp
-            let temp = mpu.get_temp()?;
             println!("temp: {:?}c", temp);
 
             // get gyro data, scaled with sensitivity 
-            let gyro = mpu.get_gyro()?;
             println!("gyro: {:?}", gyro);
 
             // get accelerometer data, scaled with sensitivity
-            let acc = mpu.get_acc()?;
             println!("acc: {:?}", acc);
         }
 
