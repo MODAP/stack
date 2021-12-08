@@ -5,9 +5,22 @@ use i2cdev::linux::LinuxI2CError; // Haha this implies I care about errors
 
 use csv::Writer;
 
+use std::{thread, time};
+use std::env;
 
 /// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
+    
+    let args: Vec<String> = env::args().collect();
+    let sleeparg = &args[1];
+
+    let sleep_millis = time::Duration::from_millis(sleeparg.parse::<u64>().unwrap());
+    let now = time::Instant::now();
+    println!("sleeping for {} milliseconds", sleeparg);
+    thread::sleep(sleep_millis);
+    assert!(now.elapsed() >= sleep_millis);
+    println!("done sleeping");
+
     println!("\n///MODAP/stack///\n  commit: {}\n  timestamp: {}\n  target: {}\n",
              env!("VERGEN_GIT_SHA"),
              env!("VERGEN_GIT_COMMIT_TIMESTAMP"),
