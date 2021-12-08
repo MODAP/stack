@@ -38,8 +38,14 @@ jobs:
         run: sudo apt install gcc-arm-linux-gnueabihf
       - name: Build binary
         run: cargo build --release --target=armv7-unknown-linux-gnueabihf
-      - name: Upload built binaries
+      - name: Upload built supports
         uses: actions/upload-artifact@v2
         with:
           name: built_binaries
           path: target/armv7-unknown-linux-gnueabihf/release
+      - name: Upload built binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: control
+          path: target/armv7-unknown-linux-gnueabihf/release/control
+
