@@ -7,4 +7,6 @@ edition = "2018"
 [dependencies]
 ndarray = "0.15.3"
 nalgebra = "0.29.0"
+v4l = "0.12.1"
 tokio = { version = "1.12.0", features = ["full"] }
+
