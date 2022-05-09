@@ -7,7 +7,6 @@ edition = "2018"
 [dependencies]
 ndarray = "0.15.3"
 nalgebra = "0.29.0"
-opencv = "0.63.0" # or whatever version is the latest
 v4l = "0.12.1"
 tokio = { version = "1.12.0", features = ["full"] }
 
