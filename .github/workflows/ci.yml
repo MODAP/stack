@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Check out app
         uses: actions/checkout@v2
+      - name: Install devel headers
+        run: sudo apt install linux-headers-generic
       - name: Setup Rustup toolchain
         run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
       - name: Install the ARMV7 gnueabihf toolchain
