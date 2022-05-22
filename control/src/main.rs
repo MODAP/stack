@@ -41,6 +41,7 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     }
 
     let mut csv_accels = Writer::from_path("accelerations.csv").unwrap();
+    let mut csv_gyro = Writer::from_path("gyros.csv").unwrap();
     let mut csv_localizations = Writer::from_path("localizations.csv").unwrap();
 
     let mut mpu = mpu6050::Mpu6050::new(i2c);
@@ -78,11 +79,13 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
 	location.update(acc_tuple, gyro_tuple).unwrap(); // you can't make me jack
 
 	// write to CSV
-	csv_accels.write_record(&[acc.to_string(), gyro.to_string()]).unwrap();
+	csv_accels.write_record(&[acc_tuple[0].to_string(), acc_tuple[1].to_string(), acc_tuple[2].to_string()]).unwrap();
+	csv_gyro.write_record(&[gyro_tuple[0].to_string(), gyro_tuple[1].to_string(), gyro_tuple[2].to_string()]).unwrap();
 	csv_localizations.write_record(&[location.position[0].to_string(), location.position[1].to_string(), location.position[2].to_string()]).unwrap();
 
 	// flush CSV writer
 	csv_accels.flush().unwrap();
+	csv_gyro.flush().unwrap();
 	csv_localizations.flush().unwrap();
     }
     
