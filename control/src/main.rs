@@ -79,8 +79,8 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
 	location.update(acc_tuple, gyro_tuple).unwrap(); // you can't make me jack
 
 	// write to CSV
-	csv_accels.write_record(&[acc_tuple[0].to_string(), acc_tuple[1].to_string(), acc_tuple[2].to_string()]).unwrap();
-	csv_gyro.write_record(&[gyro_tuple[0].to_string(), gyro_tuple[1].to_string(), gyro_tuple[2].to_string()]).unwrap();
+	csv_accels.write_record(&[acc_tuple.0.to_string(), acc_tuple.1.to_string(), acc_tuple.2.to_string()]).unwrap();
+	csv_gyro.write_record(&[gyro_tuple.0.to_string(), gyro_tuple.1.to_string(), gyro_tuple.2.to_string()]).unwrap();
 	csv_localizations.write_record(&[location.position[0].to_string(), location.position[1].to_string(), location.position[2].to_string()]).unwrap();
 
 	// flush CSV writer
