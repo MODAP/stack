@@ -10,36 +10,34 @@ on:
       - "master"
 
 jobs:
-  run_tests:
-    runs-on: ubuntu-latest
+  # run_tests:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out app
-        uses: actions/checkout@v2
-      - name: Setup Rustup Toolchain
-        run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
-      - name: Install x86_64 target
-        run: rustup target add x86_64-unknown-linux-gnu
-      - name: Run tests
-        run: cargo test --target=x86_64-unknown-linux-gnu
+  #   steps:
+  #     - name: Check out app
+  #       uses: actions/checkout@v2
+  #     - name: Setup Rustup Toolchain
+  #       run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
+  #     - name: Install x86_64 target
+  #       run: rustup target add x86_64-unknown-linux-gnu
+  #     - name: Run tests
+  #       run: cargo test --target=x86_64-unknown-linux-gnu
 
   build_binaries:
     runs-on: ubuntu-latest
-    needs: run_tests
+    # needs: run_tests remove temporarily
 
     steps:
       - name: Check out app
         uses: actions/checkout@v2
-      - name: Install devel headers
-        run: sudo apt install build-essential
       - name: Setup Rustup toolchain
         run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
       - name: Install the ARMV7 gnueabihf target
         run: rustup target add armv7-unknown-linux-gnueabihf
-      - name: Install x86_64 target
-        run: rustup target add x86_64-unknown-linux-gnu
       - name: Install cross-compilation linker
         run: sudo apt install gcc-arm-linux-gnueabihf
+      - name: Symblink all system headers
+        run: sudo ln -s /usr/arm-linux-gnueabihf/include/asm /usr/include && sudo ln -s /usr/arm-linux-gnueabihf/include/sys /usr/include && sudo ln -s /usr/arm-linux-gnueabihf/include/bits /usr/include  && sudo ln -s /usr/arm-linux-gnueabihf/include/gnu /usr/include
       - name: Build binary
         run: cargo build --release --target=armv7-unknown-linux-gnueabihf
       - name: Upload built supports
