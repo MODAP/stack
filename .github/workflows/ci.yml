@@ -16,12 +16,32 @@ jobs:
     steps:
       - name: Check out app
         uses: actions/checkout@v2
+      - name: Install Pylon (x86)
+        run: |
+          wget "https://www.baslerweb.com/fp-1615275617/media/downloads/software/pylon_software/pylon_6.2.0.21487-deb0_amd64.deb"
+          sudo apt install ./pylon_6.2.0.21487-deb0_amd64.deb
+      - name: Write .sos over w/ Pylon (arm)
+        run: |
+          wget "https://www.baslerweb.com/fp-1615275603/media/downloads/software/pylon_software/pylon_6.2.0.21487_armhf_setup.tar.gz"
+          mkdir pylon
+          tar -C ./pylon -xzf ./pylon_6.2.0.21487_aarch64_setup.tar.gz
+          pushd ./pylon
+          ls -la .
+          ls -la /opt/pylon
+          sudo tar --overwrite-dir -C /opt/pylon -xzf ./pylon_*.tar.gz
+          ls -la /opt/pylon
+          ls -la /opt/pylon/lib
+          sudo chmod 755 /opt/pylon
+          popd
+      - name: check what type it is
+        run: |
+          file /opt/pylon/lib/libpylonc-6.2.0.so
       - name: Setup Rustup toolchain
         run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
       - name: Install the ARMV7 gnueabihf target
         run: rustup target add armv7-unknown-linux-gnueabihf
       - name: Install cross-compilation linker
-        run: sudo apt install gcc-arm-linux-gnueabihf
+        run: sudo apt install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
       - name: Symblink all system headers
         run: sudo ln -s /usr/arm-linux-gnueabihf/include/asm /usr/include && sudo ln -s /usr/arm-linux-gnueabihf/include/sys /usr/include && sudo ln -s /usr/arm-linux-gnueabihf/include/bits /usr/include  && sudo ln -s /usr/arm-linux-gnueabihf/include/gnu /usr/include
       - name: Build binary

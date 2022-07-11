@@ -1,6 +1,6 @@
 [package]
 authors = ["MODAP"]
-edition = "2018"
+edition = "2021"
 name = "control"
 version = "0.1.0"
 build = "build.rs"
