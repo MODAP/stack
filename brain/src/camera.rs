@@ -32,7 +32,7 @@ impl<'a> Camera<'a> {
 
     //// SYNCRONOUS OPTS ////
     // fn camera_info() -> (design and return serialized struct)
-    // fn camera_grab(n) -> Result<ndarray::Array3> # grab n frames
+    // fn camera_grab(n) -> Result<ndarray::Array4> # grab n frames
     // Example: https://github.com/strawlab/pylon-cxx/blob/09ce34be4a84dd63a7a2a0f588ab546412b3bc83/examples/grab.rs#L34-L54
 
     //// ASYNC OPTS ////

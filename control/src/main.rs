@@ -7,6 +7,7 @@ use std::fs;
 use csv::Writer;
 
 /// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
+/// "Yes, actually" - Jack
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     
     println!("\n///MODAP/stack///\n  commit: {}\n  timestamp: {}\n  target: {}\n",
@@ -15,7 +16,8 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
              env!("VERGEN_RUSTC_HOST_TRIPLE"));
 
     let i2c = I2cdev::new("/dev/i2c-0").map_err(mpu6050::Mpu6050Error::I2c)?; // From example, but also probably correct
-    let mut delay = Delay; // Uhhhh from digging through code it's some delay functionality thing we don't care that much about
+	// Dummy struct that handles delay functionality using thread::sleep
+    let mut delay = Delay; 
 
     let mut location = brain::Locale::new((0.0,0.0,0.0), 10); // FIXME using documented values bc I don't care about fidelity and zeroing is a good idea
 
@@ -40,7 +42,7 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
     loop {
         number += 1;
 
-	// get roll and pitch estimate
+		// get roll and pitch estimate
         //let wtfthiscodedumb = mpu.get_acc_angles()?;
         //println!("r/p: {:?}", wtfthiscodedumb);
 
@@ -59,18 +61,22 @@ fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
             println!("acc: {:?}", acc);
         }
 
-	let acc_tuple = (acc.x, acc.y, acc.z);
-	let gyro_tuple = (gyro.x, gyro.y, gyro.z);
-	
-	location.update(acc_tuple, gyro_tuple).unwrap(); // you can't make me jack
+		let acc_tuple = (acc.x, acc.y, acc.z);
+		let gyro_tuple = (gyro.x, gyro.y, gyro.z);
+		
+		location.update(acc_tuple, gyro_tuple).unwrap(); // you can't make me jack
 
-	// write to CSV
-	csv_accels.write_record(&[acc.to_string(), gyro.to_string()]).unwrap();
-	csv_localizations.write_record(&[location.position[0].to_string(), location.position[1].to_string(), location.position[2].to_string()]).unwrap();
+		// write to CSV
+		csv_accels.write_record(&[acc.to_string(), gyro.to_string()]).unwrap();
+		csv_localizations.write_record(&[
+			location.position[0].to_string(),
+			location.position[1].to_string(),
+			location.position[2].to_string()
+		]).unwrap();
 
-	// flush CSV writer
-	csv_accels.flush().unwrap();
-	csv_localizations.flush().unwrap();
+		// flush CSV writer
+		csv_accels.flush().unwrap();
+		csv_localizations.flush().unwrap();
     }
     
 }

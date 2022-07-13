@@ -28,10 +28,7 @@ jobs:
           pushd ./pylon
           sudo tar --overwrite-dir -C /opt/pylon -xzf ./pylon_*.tar.gz
           sudo chmod 755 /opt/pylon
-          popd
-      - name: check what type it is
-        run: |
-          file /opt/pylon/lib/libpylonc-6.2.0.so
+          popd      
       - name: Setup Rustup toolchain
         run: curl https://sh.rustup.rs -sSf | sh -s -- -y 
       - name: Install the ARMV7 gnueabihf target
