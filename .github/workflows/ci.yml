@@ -24,13 +24,9 @@ jobs:
         run: |
           wget "https://www.baslerweb.com/fp-1615275603/media/downloads/software/pylon_software/pylon_6.2.0.21487_armhf_setup.tar.gz"
           mkdir pylon
-          tar -C ./pylon -xzf ./pylon_6.2.0.21487_aarch64_setup.tar.gz
+          tar -C ./pylon -xzf ./pylon_6.2.0.21487_armhf_setup.tar.gz
           pushd ./pylon
-          ls -la .
-          ls -la /opt/pylon
           sudo tar --overwrite-dir -C /opt/pylon -xzf ./pylon_*.tar.gz
-          ls -la /opt/pylon
-          ls -la /opt/pylon/lib
           sudo chmod 755 /opt/pylon
           popd
       - name: check what type it is
