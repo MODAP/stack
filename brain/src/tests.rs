@@ -33,6 +33,7 @@ fn camera_initalization() {
     // create new instance
     let pylon = pylon_cxx::Pylon::new();
     // And then create camera
-    let _cam = Camera::new(&pylon);
+    let cam = Camera::new(&pylon);
+    cam.debug();
 }
 

@@ -36,11 +36,11 @@ impl<'a> Camera<'a> {
     // fn camera_info() -> (design and return serialized struct)
 
 
-    fn debug(self) -> Result<()> {
+    pub fn debug(self) -> Result<()> {
 	let ver = pylon_version();
 	let info = self.camera.device_info();
 	println!("Pylon version {}.{}.{}, build {}.", ver.major, ver.minor, ver.subminor, ver.build);
-	println!("{}", info.model_name()?);
+	println!("Camera model name: {}", info.model_name()?);
 	Ok(())
     }
 
