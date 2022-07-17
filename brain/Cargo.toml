@@ -8,7 +8,9 @@ edition = "2021"
 ndarray = "0.15.3"
 nalgebra = "0.29.0"
 pylon-cxx = { version = "0.3.3", features = ["stream"] }
+log = "0.4.17"
 tokio-stream = "0.1.9"
+anyhow = "1.0.58"
 v4l = "0.12.1"
 tokio = { version = "1.12.0", features = ["full"] }
 wgpu = { version = "0.13.1", features = ["angle"] }

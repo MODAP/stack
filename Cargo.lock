@@ -171,6 +171,7 @@ dependencies = [
  "anyhow",
  "bytemuck",
  "image",
+ "log",
  "nalgebra 0.29.0",
  "ndarray",
  "pollster",
@@ -317,6 +318,7 @@ dependencies = [
  "csv",
  "i2cdev",
  "linux-embedded-hal",
+ "log",
  "mpu6050",
  "vergen",
 ]
