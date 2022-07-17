@@ -32,6 +32,18 @@ impl<'a> Camera<'a> {
         }
     }
 
+    pub fn start(&mut self) -> Result<()> {
+	self.camera.open()?;
+	self.camera.start_grabbing(&pylon_cxx::GrabOptions::default());
+	Ok(())
+    }
+
+    pub fn start_limited(&mut self, num: u32) -> Result<()> {
+	self.camera.open()?;
+	self.camera.start_grabbing(&pylon_cxx::GrabOptions::default().count(num));
+	Ok(())
+    }
+    
     /// Dumps the Pylon build version and camera model name to terminal
     ///
     /// # Returns
@@ -52,11 +64,5 @@ impl<'a> Camera<'a> {
 	Ok(())
     }
 
-    //// ASYNC OPTS ////
-    // fn camera_stream() -> Result<tokio_stream::Stream<ndarray::Array3>> {
-//    }
-    // Example: https://github.com/strawlab/pylon-cxx/blob/main/examples/async-grab.rs
-
-    // REMINDER TO WRITE TESTS IN tests.rs
 }
 
