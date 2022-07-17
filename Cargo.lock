@@ -1506,6 +1506,8 @@ checksum = "e11b6cc030cb7b430c0fb09fc260f94f6eac38a2104364808c85ab3667e0232b"
 dependencies = [
  "cxx",
  "cxx-build",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]

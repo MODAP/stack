@@ -32,10 +32,18 @@ impl<'a> Camera<'a> {
         }
     }
 
-    //// SYNCRONOUS OPTS ////
-    // fn camera_info() -> (design and return serialized struct)
-
-
+    /// Dumps the Pylon build version and camera model name to terminal
+    ///
+    /// # Returns
+    /// `Result<()>`: Pylon can error when trying to fetch the model name.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let pylon = pylon_cxx::Pylon::new();
+    /// let cam = brain::Camera::new(&pylon);
+    /// cam.debug();
+    /// ```
     pub fn debug(self) -> Result<()> {
 	let ver = pylon_version();
 	let info = self.camera.device_info();
@@ -45,7 +53,8 @@ impl<'a> Camera<'a> {
     }
 
     //// ASYNC OPTS ////
-    // fn camera_stream() -> Result<tokio_stream::Stream<ndarray::Array3>> # streaming buffer
+    // fn camera_stream() -> Result<tokio_stream::Stream<ndarray::Array3>> {
+//    }
     // Example: https://github.com/strawlab/pylon-cxx/blob/main/examples/async-grab.rs
 
     // REMINDER TO WRITE TESTS IN tests.rs
