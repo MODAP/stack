@@ -4,7 +4,7 @@ use pylon_cxx;
 // Streaming utilites
 #[allow(unused_imports)]
 use tokio_stream::StreamExt;
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 
 /// Represents an camera instance
 /// This would abstract away Pylon APIs
@@ -31,10 +31,9 @@ impl<'a> Camera<'a> {
         }
     }
 
-    //// SYNCRONOUS OPTS ////
-    // fn camera_info() -> (design and return serialized struct)
-    // fn camera_grab(n) -> Result<ndarray::Array4> # grab n frames
-    fn grab_frame(self) -> Result<Vec<u8>, (u32, String)> {
+    //// SYNCRONOUS OPTS ///
+
+    fn grab_frame(self) -> Result<Vec<u8>> {
         let mut grab_result = pylon_cxx::GrabResult::new()?;
         // Wait for an image and then retrieve it. A timeout of 0 ms is used.
         self.camera.retrieve_result(
@@ -54,7 +53,7 @@ impl<'a> Camera<'a> {
             let image_buffer = grab_result.buffer()?;
             return Ok(image_buffer.to_vec())
         } else {
-            return Err((grab_result.error_code()?, grab_result.error_description()?))
+            return Err(anyhow!("YOOOOO Code: {} {}", grab_result.error_code()?, grab_result.error_description()?))
         }
     }
     
