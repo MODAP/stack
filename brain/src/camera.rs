@@ -1,5 +1,7 @@
 // Import pylon
-use pylon_cxx;
+use pylon_cxx::*;
+
+use anyhow::Result;
 
 // Streaming utilites
 #[allow(unused_imports)]
@@ -10,7 +12,7 @@ use anyhow::{Result, anyhow};
 /// This would abstract away Pylon APIs
 pub struct Camera<'a> {
     // and the camera
-    pub camera: Option<pylon_cxx::InstantCamera<'a>>
+    pub camera: pylon_cxx::InstantCamera<'a>
 }
 
 // We will provide initalization and
@@ -25,8 +27,8 @@ impl<'a> Camera<'a> {
         // Return the camera
         Camera {
             camera: match cam {
-                Ok(c) => Some(c),
-                Err(_) => None
+                Ok(c) => c,
+                Err(_) => panic!("We need a camera.")
             }
         }
     }
@@ -65,10 +67,32 @@ impl<'a> Camera<'a> {
         }
         return Ok(frame_buffer)
     }
-    // Example: https://github.com/strawlab/pylon-cxx/blob/09ce34be4a84dd63a7a2a0f588ab546412b3bc83/examples/grab.rs#L34-L54
+    
+    //// ASYNCRONOUS OPTS ///
+
+    /// Dumps the Pylon build version and camera model name to terminal
+    ///
+    /// # Returns
+    /// `Result<()>`: Pylon can error when trying to fetch the model name.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let pylon = pylon_cxx::Pylon::new();
+    /// let cam = brain::Camera::new(&pylon);
+    /// cam.debug();
+    /// ```
+    pub fn debug(self) -> Result<()> {
+        let ver = pylon_version();
+        let info = self.camera.device_info();
+        println!("Pylon version {}.{}.{}, build {}.", ver.major, ver.minor, ver.subminor, ver.build);
+        println!("Camera model name: {}", info.model_name()?);
+        Ok(())
+    }
 
     //// ASYNC OPTS ////
-    // fn camera_stream() -> Result<tokio_stream::Stream<ndarray::Array3>> # streaming buffer
+    // fn camera_stream() -> Result<tokio_stream::Stream<ndarray::Array3>> {
+//    }
     // Example: https://github.com/strawlab/pylon-cxx/blob/main/examples/async-grab.rs
 
     // REMINDER TO WRITE TESTS IN tests.rs

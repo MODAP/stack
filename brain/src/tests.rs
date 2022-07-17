@@ -28,11 +28,24 @@ fn locale_update() {
 }
 
 #[test]
-/// A test for pylon camera initalization
 fn camera_initalization() {
     // create new instance
     let pylon = pylon_cxx::Pylon::new();
     // And then create camera
-    let _cam = Camera::new(&pylon);
+    let cam = Camera::new(&pylon);
+    cam.debug();
 }
 
+#[test]
+fn camera_stream() -> anyhow::Result<()> {
+    use tokio_stream::StreamExt;
+    let pylon = pylon_cxx::Pylon::new();
+    let camera = Camera::new(&pylon).camera;
+    async {
+	tokio::pin!(camera);
+	while let Some(grab_result) = camera.next().await {
+	    println!("{}", grab_result.width()?)
+	}	
+    };
+    Ok(())
+}
