@@ -11,6 +11,7 @@ mpu6050 = "0.1.4"
 i2cdev = "0.5.1"
 log = "0.4.17"
 linux-embedded-hal = "0.3.2"
+anyhow = "1.0.58"
 csv = "1.1.6"
 
 [build-dependencies]
