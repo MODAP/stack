@@ -6,6 +6,10 @@ pub use localization::*; // expose localization
 mod camera;
 pub use camera::*;
 
+// Deblurring of images utilities
+// mod deblur;
+// pub use deblur::*;
+
 // Build tests
 #[cfg(test)]
 mod tests;

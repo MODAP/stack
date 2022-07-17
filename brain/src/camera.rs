@@ -1,5 +1,7 @@
 // Import pylon
-use pylon_cxx;
+use pylon_cxx::*;
+
+use anyhow::Result;
 
 // Streaming utilites
 #[allow(unused_imports)]
@@ -9,7 +11,7 @@ use tokio_stream::StreamExt;
 /// This would abstract away Pylon APIs
 pub struct Camera<'a> {
     // and the camera
-    pub camera: Option<pylon_cxx::InstantCamera<'a>>
+    pub camera: pylon_cxx::InstantCamera<'a>
 }
 
 // We will provide initalization and
@@ -24,16 +26,23 @@ impl<'a> Camera<'a> {
         // Return the camera
         Camera {
             camera: match cam {
-                Ok(c) => Some(c),
-                Err(_) => None
+                Ok(c) => c,
+                Err(_) => panic!("We need a camera.")
             }
         }
     }
 
     //// SYNCRONOUS OPTS ////
     // fn camera_info() -> (design and return serialized struct)
-    // fn camera_grab(n) -> Result<ndarray::Array4> # grab n frames
-    // Example: https://github.com/strawlab/pylon-cxx/blob/09ce34be4a84dd63a7a2a0f588ab546412b3bc83/examples/grab.rs#L34-L54
+
+
+    fn debug(self) -> Result<()> {
+	let ver = pylon_version();
+	let info = self.camera.device_info();
+	println!("Pylon version {}.{}.{}, build {}.", ver.major, ver.minor, ver.subminor, ver.build);
+	println!("{}", info.model_name()?);
+	Ok(())
+    }
 
     //// ASYNC OPTS ////
     // fn camera_stream() -> Result<tokio_stream::Stream<ndarray::Array3>> # streaming buffer
