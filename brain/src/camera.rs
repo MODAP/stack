@@ -1,8 +1,6 @@
 // Import pylon
 use pylon_cxx::*;
 
-use anyhow::Result;
-
 // Streaming utilites
 #[allow(unused_imports)]
 use tokio_stream::StreamExt;
@@ -34,35 +32,39 @@ impl<'a> Camera<'a> {
     }
 
     //// SYNCRONOUS OPTS ///
-
-    fn grab_frame(self) -> Result<Vec<u8>> {
-        let mut grab_result = pylon_cxx::GrabResult::new()?;
-        // Wait for an image and then retrieve it. A timeout of 0 ms is used.
+    /// FIXME Hi yes this will gather slices and slowly fill up memory
+    fn grab_frame_buffer(&self, mut result: pylon_cxx::GrabResult) -> Result<Vec<u8>> {
         self.camera.retrieve_result(
             0,
-            &mut grab_result,
+            &mut result,
             pylon_cxx::TimeoutHandling::ThrowException,
         )?;
 
         // Checking if the image is grabbed succesfully
-        if grab_result.grab_succeeded()? {
+        if result.grab_succeeded()? {
             // Access the image data.
             if cfg!(debug_assertions) {
-                println!("Frame Size_X: {}", grab_result.width()?);
-                println!("Frame Size_Y: {}", grab_result.height()?);
+                println!("Frame Size_X: {}", result.width()?);
+                println!("Frame Size_Y: {}", result.height()?);
             }
 
-            let image_buffer = grab_result.buffer()?;
+            let image_buffer = result.buffer()?;
             return Ok(image_buffer.to_vec())
         } else {
-            return Err(anyhow!("YOOOOO Code: {} {}", grab_result.error_code()?, grab_result.error_description()?))
+            return Err(anyhow!("YOOOOO Code: {} {}", result.error_code()?, result.error_description()?))
         }
     }
-    
-    fn grab_frame_buffer(self, num_frames: usize) -> Result<Vec<Vec<u8>>> {
-        let frame_buffer: Vec<Vec<u8>>;
 
-        for i in 0..num_frames {
+    fn grab_frame(&self) -> Result<Vec<u8>> {
+        let grab_result = pylon_cxx::GrabResult::new()?;
+        return Ok(self.grab_frame_buffer(grab_result)?)
+    }
+
+    #[allow(dead_code)]    
+    fn grab_frame_vec(&self, num_frames: usize) -> Result<Vec<Vec<u8>>> {
+        let mut frame_buffer: Vec<Vec<u8>> = Vec::new();
+
+        for _i in 0..num_frames {
             frame_buffer.push(self.grab_frame()?);
         }
         return Ok(frame_buffer)
