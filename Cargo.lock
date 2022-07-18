@@ -169,8 +169,11 @@ name = "brain"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+<<<<<<< HEAD
+=======
  "bytemuck",
  "image",
+>>>>>>> 08c3c662b6529a78d68b9c26ffecdebd71f46312
  "log",
  "nalgebra 0.29.0",
  "ndarray",
