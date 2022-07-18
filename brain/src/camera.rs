@@ -33,13 +33,13 @@ impl<'a> Camera<'a> {
 
     pub fn start(&mut self) -> Result<()> {
         self.camera.open()?;
-        self.camera.start_grabbing(&pylon_cxx::GrabOptions::default());
+        self.camera.start_grabbing(&pylon_cxx::GrabOptions::default())?;
         Ok(())
     }
 
     pub fn start_limited(&mut self, num: u32) -> Result<()> {
         self.camera.open()?;
-        self.camera.start_grabbing(&pylon_cxx::GrabOptions::default().count(num));
+        self.camera.start_grabbing(&pylon_cxx::GrabOptions::default().count(num))?;
         Ok(())
     }
     
