@@ -1,5 +1,6 @@
 // import pylon API to seed pylon for camea
 use pylon_cxx;
+use anyhow::Result;
 
 // import everything from our end
 use super::*;
@@ -28,11 +29,25 @@ fn locale_update() {
 }
 
 #[test]
-/// A test for pylon camera initalization
 fn camera_initalization() {
     // create new instance
     let pylon = pylon_cxx::Pylon::new();
     // And then create camera
-    let _cam = Camera::new(&pylon);
+    let cam = Camera::new(&pylon);
+    cam.debug();
 }
 
+#[tokio::test]
+async fn camera_stream() -> anyhow::Result<()> {
+    use tokio_stream::StreamExt;
+    let pylon = pylon_cxx::Pylon::new();
+    let mut camera = Camera::new(&pylon);
+    camera.start_limited(2);
+    let inner = camera.camera;
+    tokio::pin!(inner);
+    while let Some(grab_result) = inner.next().await {
+    	println!("{}", grab_result.width().unwrap());
+    	println!("{}", grab_result.height().unwrap());
+    }
+    panic!("AAA")
+}
