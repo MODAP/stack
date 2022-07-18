@@ -1,8 +1,9 @@
+#![feature(async_closure)]
+
 // Utilties
 pub mod utils;
 pub use utils::AnyhowResult;
 
-#![feature(async_closure)]
 // Localization and apogee facilities
 mod localization;
 pub use localization::*; // expose localization
