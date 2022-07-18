@@ -94,7 +94,7 @@ impl<'a> Camera<'a> {
     /// let cam = brain::Camera::new(&pylon);
     /// cam.debug().unwrap();
     /// ```
-poll_
+
     pub fn debug(self) -> Result<()> {
         let ver = pylon_version();
         let info = self.camera.device_info();

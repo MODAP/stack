@@ -40,55 +40,56 @@ fn camera_initalization() {
 
 // #[test]
 // fn camera_grab() -> anyhow::Result<()> {
-// 	let pylon = pylon_cxx::Pylon::new();
-// 	let mut camera = Camera::new(&pylon);
-// 	camera.start_limited(5).unwrap();
-// 	for i in 0..5 {
-// 		let frame = camera.grab_frame().unwrap();
-// 		image::save_buffer(
-// 			format!("./test{}.png", i),
-// 			&frame,
-// 			1024,
-// 			1040,
-// 			image::ColorType::L8
-// 		).unwrap();
-// 	}
-// 	Ok(())
+//	let pylon = pylon_cxx::Pylon::new();
+//	let mut camera = Camera::new(&pylon);
+//	camera.start_limited(5).unwrap();
+//	for i in 0..5 {
+//		let frame = camera.grab_frame().unwrap();
+//		image::save_buffer(
+//			format!("./test{}.png", i),
+//			&frame,
+//			1024,
+//			1040,
+//			image::ColorType::L8
+//		).unwrap();
+//	}
+//	Ok(())
 // }
 
 #[tokio::test]
 async fn camera_stream() -> anyhow::Result<()> {
 	use tokio_stream::StreamExt;
+	use tokio::io::AsyncWriteExt;
+	use image::ImageEncoder;
+	use image::codecs::png::PngEncoder;
+
 	let pylon = pylon_cxx::Pylon::new();
 	let mut camera = Camera::new(&pylon);
-	camera.start_limited(5).unwrap();
+	camera.start().unwrap();
 	let inner = camera.camera;
-	// let frame = inner.take(5).collect::<Vec<pylon_cxx::GrabResult>>().await;
-	// for i in frame.iter() {
-	// 	image::save_buffer(
-	// 		"./test.png",
-	// 		i.buffer().unwrap(),
-	// 		i.width().unwrap(),
-	// 		i.height().unwrap(),
-	// 		image::ColorType::L8
-	// 	).unwrap();
-	// }
-	// for i in 0..5 {
-	// 	let res = inner.poll_next()?;
-	// }
+
 	tokio::pin!(inner);
-	let mut n = 0;
+	let mut n = 0;	
 	while let Some(grab_result) = inner.next().await {
+		let start = std::time::Instant::now();
 		n += 1;
-		image::save_buffer(
-			format!("./test{}.png", n),
-			grab_result.buffer().unwrap(),
-			grab_result.width().unwrap(),
-			grab_result.height().unwrap(),
-			image::ColorType::L8
-		).unwrap();
-		std::mem::forget(grab_result);
+		let buf = grab_result.buffer().unwrap().iter().copied().collect::<Vec<u8>>();
+		let width = grab_result.width().unwrap();
+		let height = grab_result.height().unwrap();
+		tokio::spawn(async move {
+			let mut file = tokio::fs::File::create("foo.png").await.expect("Reason");
+			let mut out = Vec::new();
+			let encoder = PngEncoder::new(&mut out);			
+			encoder.write_image(
+				&buf,
+				width,
+				height,
+				image::ColorType::L8,
+			).unwrap();
+			file.write_all(&out).await
+		});
 		println!("{n}");
-	} 
+		dbg!(start.elapsed());
+	}
 	panic!("AAA")
 }

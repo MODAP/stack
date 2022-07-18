@@ -1,3 +1,4 @@
+#![feature(async_closure)]
 // Localization and apogee facilities
 mod localization;
 pub use localization::*; // expose localization
