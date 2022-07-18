@@ -1,5 +1,6 @@
 // import pylon API to seed pylon for camea
 use pylon_cxx;
+use anyhow::Result;
 
 // import everything from our end
 use super::*;
@@ -36,16 +37,17 @@ fn camera_initalization() {
     cam.debug();
 }
 
-#[test]
-fn camera_stream() -> anyhow::Result<()> {
+#[tokio::test]
+async fn camera_stream() -> anyhow::Result<()> {
     use tokio_stream::StreamExt;
     let pylon = pylon_cxx::Pylon::new();
-    let camera = Camera::new(&pylon).camera;
-    async {
-	tokio::pin!(camera);
-	while let Some(grab_result) = camera.next().await {
-	    println!("{}", grab_result.width()?)
-	}	
-    };
-    Ok(())
+    let mut camera = Camera::new(&pylon);
+    camera.start_limited(2);
+    let inner = camera.camera;
+    tokio::pin!(inner);
+    while let Some(grab_result) = inner.next().await {
+    	println!("{}", grab_result.width().unwrap());
+    	println!("{}", grab_result.height().unwrap());
+    }
+    panic!("AAA")
 }

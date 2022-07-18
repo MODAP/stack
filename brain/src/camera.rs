@@ -31,6 +31,18 @@ impl<'a> Camera<'a> {
         }
     }
 
+    pub fn start(&mut self) -> Result<()> {
+        self.camera.open()?;
+        self.camera.start_grabbing(&pylon_cxx::GrabOptions::default());
+        Ok(())
+    }
+
+    pub fn start_limited(&mut self, num: u32) -> Result<()> {
+        self.camera.open()?;
+        self.camera.start_grabbing(&pylon_cxx::GrabOptions::default().count(num));
+        Ok(())
+    }
+    
     //// SYNCRONOUS OPTS ///
     /// FIXME Hi yes this will gather slices and slowly fill up memory
     fn grab_frame_buffer(&self, mut result: pylon_cxx::GrabResult) -> Result<Vec<u8>> {
@@ -92,11 +104,5 @@ impl<'a> Camera<'a> {
         Ok(())
     }
 
-    //// ASYNC OPTS ////
-    // fn camera_stream() -> Result<tokio_stream::Stream<ndarray::Array3>> {
-//    }
-    // Example: https://github.com/strawlab/pylon-cxx/blob/main/examples/async-grab.rs
-
-    // REMINDER TO WRITE TESTS IN tests.rs
 }
 
