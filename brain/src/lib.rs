@@ -1,3 +1,7 @@
+// Utilties
+pub mod utils;
+pub use utils::AnyhowResult;
+
 // Localization and apogee facilities
 mod localization;
 pub use localization::*; // expose localization
