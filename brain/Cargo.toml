@@ -18,3 +18,4 @@ wgpu = { version = "0.13.1", features = ["angle"] }
 image = "0.24.2"
 pollster = "0.2.5"
 bytemuck = "1.10.0"
+futures = "0.3.21"

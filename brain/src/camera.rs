@@ -51,7 +51,7 @@ impl<'a> Camera<'a> {
     pub fn grab_frame(&self) -> Result<Vec<u8>> {
         let mut result = pylon_cxx::GrabResult::new()?;
 		self.camera.retrieve_result(
-            0,
+            400,
             &mut result,
             pylon_cxx::TimeoutHandling::ThrowException,
         )?;
@@ -79,7 +79,10 @@ impl<'a> Camera<'a> {
         return Ok(frame_buffer)
     }
     
-    /// Dumps the Pylon build version and camera model name to terminal
+    /// Dumps various information concerning the camera dn Pylon
+	///
+	/// Always dumps the Pylon build version and camera model name 
+	/// If the camera has been started, will list the pixel format.
     ///
     /// # Returns
     /// `Result<()>`: Pylon can error when trying to fetch the model name.
@@ -89,8 +92,9 @@ impl<'a> Camera<'a> {
     /// ```
     /// let pylon = pylon_cxx::Pylon::new();
     /// let cam = brain::Camera::new(&pylon);
-    /// cam.debug();
+    /// cam.debug().unwrap();
     /// ```
+poll_
     pub fn debug(self) -> Result<()> {
         let ver = pylon_version();
         let info = self.camera.device_info();
