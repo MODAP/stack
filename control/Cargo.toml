@@ -12,6 +12,7 @@ i2cdev = "0.5.1"
 log = "0.4.17"
 linux-embedded-hal = "0.3.2"
 anyhow = "1.0.58"
+simplelog = { version = "^0.11.0", features = ["paris"] }
 csv = "1.1.6"
 
 [build-dependencies]

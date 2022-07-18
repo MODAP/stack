@@ -1,19 +1,37 @@
+// our utilities
 use brain;
-use mpu6050;
-use linux_embedded_hal::{I2cdev, Delay};
-use i2cdev::linux::LinuxI2CError; // Haha this implies I care about errors
 
+// std utilities
 use std::fs;
 use csv::Writer;
 
-/// Oh god. Also Jack I can't unit test this code lol, wanna know why? Are youuuu building the docs connected to an MPU6050 over i2c??? I'm not building the docs connected to an MPU6050 over i2c
-/// "Yes, actually" - Jack
+// I/O tools
+use mpu6050;
+use linux_embedded_hal::{I2cdev, Delay};
+use i2cdev::linux::LinuxI2CError;
+
+
+// Logging
+use log::{info};
+use simplelog::*;
+
+// Error Handling
+use anyhow::{Result};
+
 fn main() -> Result<(), mpu6050::Mpu6050Error<LinuxI2CError>> {
+    // Initialized system loggers
+    CombinedLogger::init(
+        vec![
+            TermLogger::new(LevelFilter::Warn, Config::default(), TerminalMode::Mixed, ColorChoice::Auto),
+            TermLogger::new(LevelFilter::Info, Config::default(), TerminalMode::Mixed, ColorChoice::Auto)
+        ]
+    ).unwrap_or(()); 
+    // TODO
     
-    println!("\n///MODAP/stack///\n  commit: {}\n  timestamp: {}\n  target: {}\n",
-             env!("VERGEN_GIT_SHA"),
-             env!("VERGEN_GIT_COMMIT_TIMESTAMP"),
-             env!("VERGEN_RUSTC_HOST_TRIPLE"));
+    info!("\n///MODAP/stack///\n  commit: {}\n  timestamp: {}\n  target: {}\n",
+          env!("VERGEN_GIT_SHA"),
+          env!("VERGEN_GIT_COMMIT_TIMESTAMP"),
+          env!("VERGEN_RUSTC_HOST_TRIPLE"));
 
     let i2c = I2cdev::new("/dev/i2c-0").map_err(mpu6050::Mpu6050Error::I2c)?; // From example, but also probably correct
 	// Dummy struct that handles delay functionality using thread::sleep
