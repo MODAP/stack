@@ -1,6 +1,6 @@
 // import pylon API to seed pylon for camea
-use pylon_cxx;
 use anyhow::Result;
+use pylon_cxx;
 
 // import everything from our end
 use super::*;
@@ -10,32 +10,31 @@ use super::*;
 #[test]
 /// A test for locale creation
 fn locale_create() {
-	let mut _loc = Locale::new((0.0,4000.0,0.0), 500);
+    let mut _loc = Locale::new((0.0, 4000.0, 0.0), 500);
 }
 
 #[test]
 /// A test for locale updating
 fn locale_update() {
-	let mut loc = Locale::new((0.0,4000.0,0.0), 500);
+    let mut loc = Locale::new((0.0, 4000.0, 0.0), 500);
 
-	// DANGEROUS we unwrap b/c it returns a Result
-	// but it could error with SystemTimeError
-	// when Rust cannot access the hardware clock
-	// and that case should be handled with `match`
-	// instead of just wrapping
+    // DANGEROUS we unwrap b/c it returns a Result
+    // but it could error with SystemTimeError
+    // when Rust cannot access the hardware clock
+    // and that case should be handled with `match`
+    // instead of just wrapping
 
-	loc.update((1.0, -9.8, 0.0),
-			   (0.0, 0.3, 0.5)).unwrap();
+    loc.update((1.0, -9.8, 0.0), (0.0, 0.3, 0.5)).unwrap();
 }
 
 #[test]
 fn camera_initalization() {
-	// create new instance
-	let pylon = pylon_cxx::Pylon::new();
-	// And then create camera
-	let cam = Camera::new(&pylon);
-	// cam.start();
-	cam.debug();
+    // create new instance
+    let pylon = pylon_cxx::Pylon::new();
+    // And then create camera
+    let cam = Camera::new(&pylon);
+    // cam.start();
+    cam.debug();
 }
 
 // #[test]
@@ -56,40 +55,39 @@ fn camera_initalization() {
 //	Ok(())
 // }
 
-#[tokio::test]
-async fn camera_stream() -> anyhow::Result<()> {
-	use tokio_stream::StreamExt;
-	use tokio::io::AsyncWriteExt;
-	use image::ImageEncoder;
-	use image::codecs::png::PngEncoder;
+// #[tokio::test]
+// async fn camera_stream() -> anyhow::Result<()> {
+// 	use tokio_stream::StreamExt;
+// 	use tokio::io::AsyncWriteExt;
+// 	use image::ImageEncoder;
+// 	use image::codecs::png::PngEncoder;
 
-	let pylon = pylon_cxx::Pylon::new();
-	let mut camera = Camera::new(&pylon);
-	camera.start().unwrap();
-	let inner = camera.camera;
-
-	tokio::pin!(inner);
-	let mut n = 0;	
-	while let Some(grab_result) = inner.next().await {
-		let start = std::time::Instant::now();
-		n += 1;
-		let buf = grab_result.buffer().unwrap().iter().copied().collect::<Vec<u8>>();
-		let width = grab_result.width().unwrap();
-		let height = grab_result.height().unwrap();
-		tokio::spawn(async move {
-			let mut file = tokio::fs::File::create("foo.png").await.expect("Reason");
-			let mut out = Vec::new();
-			let encoder = PngEncoder::new(&mut out);			
-			encoder.write_image(
-				&buf,
-				width,
-				height,
-				image::ColorType::L8,
-			).unwrap();
-			file.write_all(&out).await
-		});
-		println!("{n}");
-		dbg!(start.elapsed());
-	}
-	panic!("AAA")
-}
+// 	let pylon = pylon_cxx::Pylon::new();
+// 	let mut camera = Camera::new(&pylon);
+// 	camera.start_limited(2).unwrap();
+// 	let inner = camera.camera;
+// 	tokio::pin!(inner);
+// 	let mut n = 0;
+// 	while let Some(grab_result) = inner.next().await {
+// 		let start = std::time::Instant::now();
+// 		n += 1;
+// 		let buf = grab_result.buffer().unwrap().iter().copied().collect::<Vec<u8>>();
+// 		let width = grab_result.width().unwrap();
+// 		let height = grab_result.height().unwrap();
+// 		tokio::spawn(async move {
+// 			let mut file = tokio::fs::File::create("foo.png").await.expect("Reason");
+// 			let mut out = Vec::new();
+// 			let encoder = PngEncoder::new(&mut out);
+// 			encoder.write_image(
+// 				&buf,
+// 				width,
+// 				height,
+// 				image::ColorType::L8,
+// 			).unwrap();
+// 			file.write_all(&out).await
+// 		});
+// 		println!("{n}");
+// 		dbg!(start.elapsed());
+// 	}
+// 	panic!("True async isn't properly implemented yet.")
+// }

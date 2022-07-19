@@ -17,10 +17,10 @@ fn floodfill(image: na::SMatrix<na::Vector3<f32>, 1920, 1080>, pos: na::Vector2<
     let mut q = VecDeque::new();
     q.push_front(image[(pos.x, pos.y)]);
     while !q.is_empty() {
-	let mut n = q.pop_front().unwrap();
-	let east = image[(pos.x+1, pos.y)];
-	if (n - east).norm() < THRESHOLD {
-	    q.push_front(east);
-	}
+        let mut n = q.pop_front().unwrap();
+        let east = image[(pos.x + 1, pos.y)];
+        if (n - east).norm() < THRESHOLD {
+            q.push_front(east);
+        }
     }
 }

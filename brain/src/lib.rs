@@ -2,7 +2,7 @@
 
 // Utilties
 pub mod utils;
-pub use utils::AnyhowResult;
+pub use utils::*;
 
 // Localization and apogee facilities
 mod localization;
@@ -19,7 +19,3 @@ pub use camera::*;
 // Build tests
 #[cfg(test)]
 mod tests;
-
-
-
-
