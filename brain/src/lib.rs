@@ -1,5 +1,3 @@
-#![feature(async_closure)]
-
 // Utilties
 pub mod utils;
 pub use utils::*;
