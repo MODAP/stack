@@ -1,9 +1,9 @@
 use brain;
 use brain::utils::ResultExt;
-
 use csv::Writer;
-
 use linux_embedded_hal::{Delay, I2cdev};
+
+mod mpu;
 
 fn setup_mpu() -> anyhow::Result<mpu6050::Mpu6050<I2cdev>> {
     // TODO @jemoka please clarify
