@@ -21,3 +21,6 @@ Boom! Ascend. We are in the air.
 
 # CI Pipeline
 The CI workflow should cross-compile correct binary to work on a [NanoPi NEO Air](https://wiki.friendlyarm.com/wiki/index.php/NanoPi_NEO_Air). Find the current builds in the artifacts page.
+
+
+
